@@ -9,7 +9,7 @@
 <body>
 <h1>HELLO!</h1>
 
-<span th:each="fileMap : ${fileResults}">
+<span th:each="fileList : ${fileResults}">
     <table class="table table-bordered">
             <thead>
                 <tr>
@@ -18,9 +18,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="key: ${fileMap.keySet()}">
-                    <th scope="row" class="col-2" th:text="${key}"></th>
-                    <th scope="row" class="col-2" th:text="${fileMap.get(key)}" th:style="${fileMap.get(key)} == TRUE ? 'background-color: green' : 'background-color: red'"></th>
+                <tr th:each="layer: ${fileList}">
+                    <th scope="row" class="col-2" th:text="${layer.getName() + ' ' + layer.getWidth()}"></th>
+                    <th scope="row" class="col-2" th:text="${layer.isMatching()}" th:style="${layer.isMatching()} == TRUE ? 'background-color: green' : 'background-color: red'"></th>
                 </tr>
             </tbody>
     </table>

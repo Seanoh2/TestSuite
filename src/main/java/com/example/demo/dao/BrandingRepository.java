@@ -1,6 +1,7 @@
 package com.example.demo.dao;
 
 import ch.qos.logback.core.util.FileUtil;
+import com.example.demo.model.IconMetadata;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.io.FileUtils;
 
@@ -24,19 +25,26 @@ public class BrandingRepository {
 
     private final Set<Integer> validEntries = new HashSet<>(Arrays.asList(16,32,48,256));
 
-    public LinkedHashMap<String, Boolean> validateIcon(File icon) {
-        LinkedHashMap<String, Boolean> results = new LinkedHashMap<>();
+    public List<IconMetadata> validateIcon(File icon) {
+        List<IconMetadata> results = new ArrayList<>();
         System.out.println("Checking file: " + icon.getName());
 
         try {
             List<BufferedImage> images = Imaging.getAllBufferedImages(icon);
             images.forEach(ico -> {
-                if(!validEntries.contains(ico.getHeight())) {
-                    System.out.println("Invalid entry found");
-                    results.put(icon.getName() + ico.getHeight(), false);
+                IconMetadata iconInfo = new IconMetadata(
+                        icon.getName(),
+                        ico.getWidth(),
+                        ico.getHeight()
+                );
+
+                if (validEntries.contains(ico.getHeight())) {
+                    iconInfo.setMatching(true);
                 } else {
-                    results.put(icon.getName() + ico.getHeight(), true);
+                    iconInfo.setMatching(false);
                 }
+
+                results.add(iconInfo);
             });
         } catch (IOException e) {
             throw new RuntimeException("Error changing ico to file" + e);
@@ -44,11 +52,11 @@ public class BrandingRepository {
 
         return results;
     }
-    public List<Map<String, Boolean>> checkFile(String path) {
+    public List<List<IconMetadata>> checkFile(String path) {
 
         Path filePath = Paths.get(path);
         List<File> files;
-        List<Map<String, Boolean>> validationResults = new ArrayList<>();
+        List<List<IconMetadata>> validationResults = new ArrayList<>();
 
 
         try {
@@ -58,7 +66,6 @@ public class BrandingRepository {
         }
 
         files.forEach(file -> {
-            System.out.println("Checking file: " + file.getName());
             validationResults.add(validateIcon(file));
         });
 
@@ -75,7 +82,7 @@ public class BrandingRepository {
 
                 if (!entry.isDirectory()) {
                     try (InputStream inputStream = zipFile.getInputStream(entry)) {
-                        File targetFile = new File("src/main/resources/targetFile.ico");
+                        File targetFile = new File("src/main/resources/temp/" + entry.getName());
 
                         if(entry.getName().endsWith(".ico")) {
                             FileUtils.copyInputStreamToFile(inputStream, targetFile);
@@ -87,5 +94,9 @@ public class BrandingRepository {
         }
 
         return files;
+    }
+
+    private void cleanUp() {
+
     }
 }

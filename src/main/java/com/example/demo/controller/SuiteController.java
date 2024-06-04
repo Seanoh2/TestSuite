@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dao.BrandingRepository;
+import com.example.demo.model.IconMetadata;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ public class SuiteController {
 
     @GetMapping("/branding")
     public String brandingTesting(Model theModel) {
-        String path = "C:\\Users\\sohora\\Projects\\TestSuite\\src\\main\\resources\\145e0001.zip";
+        String path = "C:\\Users\\Sean\\Documents\\Projects\\testSuite\\src\\main\\resources\\145e0001.zip";
         BrandingRepository validation = new BrandingRepository();
-        List<Map<String, Boolean>> results =  validation.checkFile(path);
+        List<List<IconMetadata>> results =  validation.checkFile(path);
         theModel.addAttribute("fileResults", results);
 
         return "testPages/branding";
