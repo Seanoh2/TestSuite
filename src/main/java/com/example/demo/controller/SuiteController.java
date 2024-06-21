@@ -19,7 +19,7 @@ import java.util.List;
 public class SuiteController {
 
     public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "\\src\\main\\resources\\upload";
-    private final File TEMP_FOLDER_DIRECTORY = new File("C:\\Users\\sohora\\Projects\\TestSuite\\src\\main\\resources\\temp");
+    private final File TEMP_FOLDER_DIRECTORY = new File(System.getProperty("user.dir") + "\\src\\main\\resources\\temp");
 
     @RequestMapping(method= RequestMethod.GET)
     public String index(Model theModel)
