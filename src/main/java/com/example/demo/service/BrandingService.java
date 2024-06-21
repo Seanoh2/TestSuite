@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.IconMetadata;
+import com.example.demo.model.ImageMetadata;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ import java.util.zip.ZipFile;
 @Service
 public class BrandingService {
 
-    private final Set<Integer> validEntries = new HashSet<>(Arrays.asList(16,32,48,256));
+    private final Set<Integer> VALID_WINDOWS_DIMENSIONS = new HashSet<>(Arrays.asList(16,32,48,256));
+    private final Set<Integer> VALID_MAC_DIMENSIONS = new HashSet<>(Arrays.asList(16,32,48));
     private final byte[] icoFormat = {00,00,01,00};
 
     public List<IconMetadata> validateIcon(File icon) {
@@ -40,7 +42,12 @@ public class BrandingService {
                         ico.getHeight()
                 );
 
-                iconInfo.setMatching(validEntries.contains(ico.getHeight()));
+                if(icon.getName().toUpperCase().contains("MAC")) {
+                    iconInfo.setMatching(VALID_MAC_DIMENSIONS.contains(ico.getHeight()));
+                } else {
+                    iconInfo.setMatching(VALID_WINDOWS_DIMENSIONS.contains(ico.getHeight()));
+                }
+
                 iconInfo.setIcoFormated(iconFileFormat);
 
                 results.add(iconInfo);
@@ -51,12 +58,16 @@ public class BrandingService {
 
         return results;
     }
+
+    public List<ImageMetadata> validateImage(File image) {
+        return null;
+    }
+
     public List<List<IconMetadata>> checkFile(String path) {
 
         Path filePath = Paths.get(path);
         List<File> files;
         List<List<IconMetadata>> validationResults = new ArrayList<>();
-
 
         try {
             files = this.unzip(filePath);
@@ -65,7 +76,11 @@ public class BrandingService {
         }
 
         files.forEach(file -> {
-            validationResults.add(validateIcon(file));
+            if(file.getName().toUpperCase().endsWith(".ICO")) {
+                validationResults.add(validateIcon(file));
+            } else if(file.getName().toUpperCase().endsWith(".PNG") || file.getName().endsWith(".jpeg")) {
+                validationResults.add(validateImage(file));
+            }
         });
 
         return validationResults;
@@ -82,11 +97,8 @@ public class BrandingService {
                 if (!entry.isDirectory()) {
                     try (InputStream inputStream = zipFile.getInputStream(entry)) {
                         File targetFile = new File("src/main/resources/temp/" + entry.getName());
-
-                        if(entry.getName().endsWith(".ico")) {
-                            FileUtils.copyInputStreamToFile(inputStream, targetFile);
-                            files.add(targetFile);
-                        }
+                        FileUtils.copyInputStreamToFile(inputStream, targetFile);
+                        files.add(targetFile);
                     }
                 }
             }
@@ -105,7 +117,18 @@ public class BrandingService {
         System.out.println(Arrays.toString(buffer));
         return Arrays.equals(icoFormat, buffer);
     }
-;
+
+    public boolean validatePNGFormat(File iconFile) throws IOException {
+        byte[] buffer = new byte[8];
+        InputStream is = new FileInputStream(iconFile);
+        if (is.read(buffer) != buffer.length) {
+        }
+        is.close();
+
+        System.out.println(Arrays.toString(buffer));
+        return Arrays.equals(icoFormat, buffer);
+    }
+
     public void CleanUp(File file) {
         try {
             FileUtils.cleanDirectory(file);

@@ -2,23 +2,23 @@ package com.example.demo.model;
 
 import java.util.Objects;
 
-public class PNGMetadata {
+public class ImageMetadata implements Metadata{
     private String name;
     private int width;
     private int height;
     private boolean matching;
     private boolean pngFormated;
 
-    public PNGMetadata() {
+    public ImageMetadata() {
     }
 
-    public PNGMetadata(String name, int width, int height) {
+    public ImageMetadata(String name, int width, int height) {
         this.name = name;
         this.width = width;
         this.height = height;
     }
 
-    public PNGMetadata(String name, int width, int height, boolean matching, boolean pngFormated) {
+    public ImageMetadata(String name, int width, int height, boolean matching, boolean pngFormated) {
         this.name = name;
         this.width = width;
         this.height = height;
@@ -58,11 +58,11 @@ public class PNGMetadata {
         this.matching = matching;
     }
 
-    public boolean isPngFormated() {
+    public boolean correctFormat() {
         return pngFormated;
     }
 
-    public void setPngFormated(boolean pngFormated) {
+    public void setCorrectFormat(boolean pngFormated) {
         this.pngFormated = pngFormated;
     }
 
@@ -70,7 +70,7 @@ public class PNGMetadata {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PNGMetadata that = (PNGMetadata) o;
+        ImageMetadata that = (ImageMetadata) o;
         return width == that.width && height == that.height && matching == that.matching && pngFormated == that.pngFormated && Objects.equals(name, that.name);
     }
 

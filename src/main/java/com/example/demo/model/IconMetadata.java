@@ -2,7 +2,7 @@ package com.example.demo.model;
 
 import java.util.Objects;
 
-public class IconMetadata {
+public class IconMetadata implements Metadata {
     private String name;
     private int width;
     private int height;
@@ -58,11 +58,11 @@ public class IconMetadata {
         this.matching = matching;
     }
 
-    public boolean isIcoFormated() {
+    public boolean correctFormat() {
         return icoFormated;
     }
 
-    public void setIcoFormated(boolean icoFormated) {
+    public void setCorrectFormat(boolean icoFormated) {
         this.icoFormated = icoFormated;
     }
 
