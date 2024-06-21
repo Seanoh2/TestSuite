@@ -26,7 +26,7 @@
                     <td class="col-2" th:text="${layer.getName()}"></td>
                     <td class="col-1" th:text="${layer.getWidth() + 'x' + layer.getHeight()}"></td>
                     <td class="col-2" th:text="${layer.isMatching()}" th:style="${layer.isMatching()} == TRUE ? 'background-color: green' : 'background-color: red'"></td>
-                    <td class="col-2" th:text="${layer.isIcoFormated()}" th:style="${layer.isIcoFormated()} == TRUE ? 'background-color: green' : 'background-color: red'"></td>
+                    <td class="col-2" th:text="${layer.correctFormat()}" th:style="${layer.correctFormat()} == TRUE ? 'background-color: green' : 'background-color: red'"></td>
                 </tr>
             </tbody>
         </span>

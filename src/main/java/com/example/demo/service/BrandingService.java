@@ -48,7 +48,7 @@ public class BrandingService {
                     iconInfo.setMatching(VALID_WINDOWS_DIMENSIONS.contains(ico.getHeight()));
                 }
 
-                iconInfo.setIcoFormated(iconFileFormat);
+                iconInfo.setCorrectFormat(iconFileFormat);
 
                 results.add(iconInfo);
             });
@@ -79,7 +79,7 @@ public class BrandingService {
             if(file.getName().toUpperCase().endsWith(".ICO")) {
                 validationResults.add(validateIcon(file));
             } else if(file.getName().toUpperCase().endsWith(".PNG") || file.getName().endsWith(".jpeg")) {
-                validationResults.add(validateImage(file));
+                //validationResults.add(validateImage(file));
             }
         });
 
@@ -97,8 +97,11 @@ public class BrandingService {
                 if (!entry.isDirectory()) {
                     try (InputStream inputStream = zipFile.getInputStream(entry)) {
                         File targetFile = new File("src/main/resources/temp/" + entry.getName());
-                        FileUtils.copyInputStreamToFile(inputStream, targetFile);
-                        files.add(targetFile);
+
+                        if(targetFile.getName().toUpperCase().endsWith(".ICO")) {
+                            FileUtils.copyInputStreamToFile(inputStream, targetFile);
+                            files.add(targetFile);
+                        }
                     }
                 }
             }
