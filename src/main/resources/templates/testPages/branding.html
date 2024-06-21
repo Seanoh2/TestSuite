@@ -15,12 +15,14 @@
                 <tr>
                     <th scope="col" class="col-2">File Name</th>
                     <th scope="col" class="col-2">Result</th>
+                    <th scope="col" class="col-2">Icon Format</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="layer: ${fileList}">
                     <th scope="row" class="col-2" th:text="${layer.getName() + ' ' + layer.getWidth()}"></th>
                     <th scope="row" class="col-2" th:text="${layer.isMatching()}" th:style="${layer.isMatching()} == TRUE ? 'background-color: green' : 'background-color: red'"></th>
+                    <th scope="row" class="col-2" th:text="${layer.isIcoFormated()}" th:style="${layer.isIcoFormated()} == TRUE ? 'background-color: green' : 'background-color: red'"></th>
                 </tr>
             </tbody>
     </table>

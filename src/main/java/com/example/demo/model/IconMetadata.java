@@ -7,6 +7,7 @@ public class IconMetadata {
     private int width;
     private int height;
     private boolean matching;
+    private boolean icoFormated;
 
     public IconMetadata() {
     }
@@ -17,11 +18,12 @@ public class IconMetadata {
         this.height = height;
     }
 
-    public IconMetadata(String name, int width, int height, boolean matching) {
+    public IconMetadata(String name, int width, int height, boolean matching, boolean icoFormated) {
         this.name = name;
         this.width = width;
         this.height = height;
         this.matching = matching;
+        this.icoFormated = icoFormated;
     }
 
     public String getName() {
@@ -56,16 +58,24 @@ public class IconMetadata {
         this.matching = matching;
     }
 
+    public boolean isIcoFormated() {
+        return icoFormated;
+    }
+
+    public void setIcoFormated(boolean icoFormated) {
+        this.icoFormated = icoFormated;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         IconMetadata that = (IconMetadata) o;
-        return width == that.width && height == that.height && matching == that.matching && Objects.equals(name, that.name);
+        return width == that.width && height == that.height && matching == that.matching && icoFormated == that.icoFormated && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, width, height, matching);
+        return Objects.hash(name, width, height, matching, icoFormated);
     }
 }

@@ -1,33 +1,35 @@
-package com.example.demo.dao;
+package com.example.demo.service;
 
-import ch.qos.logback.core.util.FileUtil;
 import com.example.demo.model.IconMetadata;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.io.FileUtils;
+import org.springframework.stereotype.Service;
 
-import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
-public class BrandingRepository {
+@Service
+public class BrandingService {
 
     private final Set<Integer> validEntries = new HashSet<>(Arrays.asList(16,32,48,256));
+    private final byte[] icoFormat = {00,00,01,00};
 
     public List<IconMetadata> validateIcon(File icon) {
         List<IconMetadata> results = new ArrayList<>();
+        boolean iconFileFormat;
+
         System.out.println("Checking file: " + icon.getName());
+
+        try {
+            iconFileFormat = validateIcoFormat(icon);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         try {
             List<BufferedImage> images = Imaging.getAllBufferedImages(icon);
@@ -38,11 +40,8 @@ public class BrandingRepository {
                         ico.getHeight()
                 );
 
-                if (validEntries.contains(ico.getHeight())) {
-                    iconInfo.setMatching(true);
-                } else {
-                    iconInfo.setMatching(false);
-                }
+                iconInfo.setMatching(validEntries.contains(ico.getHeight()));
+                iconInfo.setIcoFormated(iconFileFormat);
 
                 results.add(iconInfo);
             });
@@ -96,7 +95,22 @@ public class BrandingRepository {
         return files;
     }
 
-    private void cleanUp() {
+    public boolean validateIcoFormat(File iconFile) throws IOException {
+        byte[] buffer = new byte[4];
+        InputStream is = new FileInputStream(iconFile);
+        if (is.read(buffer) != buffer.length) {
+        }
+        is.close();
 
+        System.out.println(Arrays.toString(buffer));
+        return Arrays.equals(icoFormat, buffer);
+    }
+;
+    public void CleanUp(File file) {
+        try {
+            FileUtils.cleanDirectory(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
